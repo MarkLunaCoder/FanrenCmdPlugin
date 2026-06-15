@@ -160,3 +160,7 @@ git push origin v0.1.0
 除另有说明外，本项目代码按 [MIT License](LICENSE) 发布。
 
 `ref_doc/fanren-introduce` 是基于上游公开资料整理的指令参考，原始资料来源与权益以 [iwooji77/fanren](https://github.com/iwooji77/fanren) 为准。该目录及由该目录打包进 APK assets 的指令资料不纳入本项目 MIT 授权范围；如相关权利人认为不适合继续公开展示或随 APK 分发，请通过 GitHub Issue 联系维护者删除或调整。
+
+## 致谢
+
+- [LINUX DO 社区](https://linux.do/)
