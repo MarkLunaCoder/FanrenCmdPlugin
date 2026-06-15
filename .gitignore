@@ -1,0 +1,22 @@
+.gradle/
+build/
+app/build/
+local.properties
+*.apk
+*.aab
+*.iml
+.idea/
+
+# Local device verification artifacts
+docs/debug-*
+docs/device-*
+docs/uiautomator-*
+
+# Local development process notes
+process.md
+
+# Generated or exploratory design artifacts
+docs/generated-assets/
+docs/superpowers/
+docs/ui-concepts/
+docs/ui-reference-v2.png

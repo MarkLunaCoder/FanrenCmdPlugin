@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>凡人指令助手 README 模拟图</title>
+  <style>
+    :root {
+      --page: #f6f3ea;
+      --panel: #fffdf7;
+      --ink: #222222;
+      --muted: #5f5b52;
+      --brand: #246b57;
+      --brand-dark: #174a3b;
+      --brand-soft: #e2efe8;
+      --line: #d8d1c3;
+      --amber: #b8792d;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #ece7dc;
+      color: var(--ink);
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif;
+    }
+
+    .stage {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 36px;
+      padding: 36px;
+      align-items: flex-start;
+    }
+
+    .shot {
+      width: 430px;
+      height: 900px;
+      overflow: hidden;
+      position: relative;
+      background:
+        radial-gradient(circle at 18% 5%, rgba(36, 107, 87, 0.08), transparent 34%),
+        radial-gradient(circle at 90% 25%, rgba(184, 121, 45, 0.08), transparent 30%),
+        linear-gradient(165deg, #fbfaf5 0%, var(--page) 58%, #ede8db 100%);
+      border-radius: 34px;
+      box-shadow: 0 20px 55px rgba(55, 45, 32, 0.24);
+    }
+
+    .shot::after {
+      content: "模拟界面";
+      position: absolute;
+      right: 18px;
+      bottom: 16px;
+      z-index: 20;
+      color: rgba(95, 91, 82, 0.56);
+      font-size: 12px;
+    }
+
+    .statusbar {
+      height: 34px;
+      padding: 10px 22px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #252525;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .icons {
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    .main-content {
+      padding: 30px 24px 28px;
+    }
+
+    .hero {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .app-icon {
+      width: 86px;
+      height: 86px;
+      border-radius: 22px;
+      background: rgba(255, 253, 247, 0.9);
+      border: 1px solid rgba(216, 209, 195, 0.95);
+      box-shadow: 0 5px 18px rgba(60, 50, 35, 0.12);
+      padding: 8px;
+      object-fit: contain;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.08;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .badge {
+      display: inline-flex;
+      margin-top: 10px;
+      min-height: 30px;
+      align-items: center;
+      border-radius: 999px;
+      padding: 0 14px;
+      background: var(--brand-soft);
+      border: 1px solid rgba(36, 107, 87, 0.22);
+      color: var(--brand-dark);
+      font-size: 15px;
+    }
+
+    .card {
+      margin-top: 28px;
+      padding: 18px;
+      border-radius: 10px;
+      background: rgba(255, 253, 247, 0.92);
+      border: 1px solid var(--line);
+      box-shadow: 0 8px 22px rgba(64, 54, 38, 0.08);
+      font-size: 19px;
+      line-height: 1.72;
+    }
+
+    .section-title {
+      margin: 28px 0 12px;
+      color: var(--brand-dark);
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .button {
+      height: 56px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255, 253, 247, 0.96);
+      box-shadow: 0 4px 12px rgba(64, 54, 38, 0.12);
+    }
+
+    .button.primary {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: white;
+    }
+
+    .floating-token {
+      position: absolute;
+      right: 36px;
+      bottom: 180px;
+      width: 78px;
+      text-align: center;
+      z-index: 8;
+    }
+
+    .seal-mark {
+      position: relative;
+      width: 74px;
+      height: 74px;
+    }
+
+    .seal {
+      width: 74px;
+      height: 74px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.22));
+    }
+
+    .seal-char {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 25px;
+      font-weight: 800;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.42);
+      pointer-events: none;
+    }
+
+    .token-label {
+      margin: -2px auto 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 8px;
+      background: rgba(34, 34, 34, 0.82);
+      color: white;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.72;
+    }
+
+    .mock-app {
+      height: calc(100% - 34px);
+      position: relative;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.92), transparent 34%),
+        linear-gradient(160deg, #e7f0e8 0%, #f6f3ea 54%, #f0eadf 100%);
+      padding: 24px 22px;
+    }
+
+    .mock-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #2b2b2b;
+      font-weight: 800;
+      font-size: 23px;
+    }
+
+    .mock-pill {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(216, 209, 195, 0.78);
+      color: #515b56;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .fake-chat {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: 78px;
+    }
+
+    .bubble {
+      max-width: 76%;
+      margin-top: 10px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(216, 209, 195, 0.75);
+      color: #59615d;
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    .bubble.mine {
+      margin-left: auto;
+      background: #e3efe8;
+      color: #24483e;
+    }
+
+    .input-bar {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 22px;
+      height: 44px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(216, 209, 195, 0.82);
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+      color: #8b918d;
+      font-size: 18px;
+    }
+
+    .panel {
+      position: absolute;
+      left: 58px;
+      top: 190px;
+      width: 318px;
+      height: 420px;
+      z-index: 6;
+      display: flex;
+      flex-direction: column;
+      border-radius: 11px;
+      background: rgba(255, 253, 247, 0.98);
+      border: 1px solid rgba(216, 209, 195, 0.95);
+      box-shadow: 0 16px 36px rgba(39, 32, 21, 0.24);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      height: 48px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .panel-title {
+      color: #1d7d63;
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .panel-subtitle {
+      margin-top: 3px;
+      color: #69766f;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .close {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #eee9de;
+      color: #4d5652;
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .search-box {
+      margin: 0 12px 4px;
+      height: 36px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      background: #f2eee5;
+      color: #68726d;
+      font-size: 13px;
+    }
+
+    .panel-body {
+      display: flex;
+      gap: 8px;
+      padding: 10px 10px 8px;
+      min-height: 0;
+      flex: 1;
+    }
+
+    .tabs {
+      width: 76px;
+      border-right: 1px solid #e6decf;
+      padding-right: 8px;
+    }
+
+    .tab {
+      height: 32px;
+      margin-bottom: 8px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+      color: #52615d;
+      background: #f3f0e8;
+      font-size: 12px;
+      text-align: center;
+      line-height: 1.15;
+    }
+
+    .tab.active {
+      background: var(--brand);
+      color: white;
+      font-weight: 800;
+    }
+
+    .commands {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cmd {
+      min-height: 58px;
+      padding: 6px 2px 6px 4px;
+      border-bottom: 1px solid rgba(216, 209, 195, 0.58);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cmd strong {
+      display: block;
+      color: #1d7d63;
+      font-size: 15px;
+      line-height: 1.15;
+      font-weight: 800;
+    }
+
+    .cmd span {
+      display: block;
+      margin-top: 5px;
+      color: #5f6863;
+      font-size: 12px;
+      line-height: 1.25;
+    }
+
+    .cmd-star {
+      margin-left: auto;
+      color: var(--amber);
+      font-size: 17px;
+    }
+
+    .panel-foot {
+      height: 28px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      color: #6f756f;
+      font-size: 11px;
+      border-top: 1px solid rgba(216, 209, 195, 0.52);
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <section class="shot main-shot" aria-label="凡人指令助手主界面模拟图">
+      <div class="statusbar"><span>23:46</span><span class="icons">5G  Wi-Fi  82%</span></div>
+      <div class="main-content">
+        <div class="hero">
+          <img class="app-icon" src="../../app/src/main/res/drawable-nodpi/fanren_app_icon.png" alt="" />
+          <div>
+            <h1>凡人指令助手</h1>
+            <div class="badge">文字修仙指令面板</div>
+          </div>
+        </div>
+        <div class="card">
+          悬浮按钮：已授权。<br />
+          无障碍自动填入：已授权。<br />
+          当前推荐：开启悬浮按钮后，在聊天、笔记或搜索框中选择指令。
+        </div>
+        <div class="section-title">权限与入口</div>
+        <div class="button primary">授权悬浮按钮</div>
+        <div class="button">授权无障碍自动填入</div>
+        <div class="button">开启悬浮按钮</div>
+        <div class="button">打开 Telegram（可选）</div>
+        <div class="card note">切到带输入框的应用后，点击悬浮令牌选择指令。指令只填入当前输入框，不自动发送。</div>
+      </div>
+      <div class="floating-token">
+        <div class="seal-mark">
+          <img class="seal" src="../../app/src/main/res/drawable-nodpi/floating_cultivation_seal.png" alt="" />
+          <span class="seal-char">令</span>
+        </div>
+        <div class="token-label">指令面板</div>
+      </div>
+    </section>
+
+    <section class="shot panel-shot" aria-label="凡人指令助手悬浮面板模拟图">
+      <div class="statusbar"><span>23:47</span><span class="icons">5G  Wi-Fi  82%</span></div>
+      <div class="mock-app">
+        <div class="mock-top">
+          <span>修仙群聊</span>
+          <span>⌕  ⋮</span>
+        </div>
+        <div class="mock-pill">这是虚构的输入场景，用来展示悬浮面板如何覆盖在其他应用上方。</div>
+        <div class="fake-chat">
+          <div class="bubble">道友，今天先做哪些日常？</div>
+          <div class="bubble mine">我准备先查状态，再闭关。</div>
+        </div>
+        <div class="input-bar">输入消息</div>
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">指令面板</div>
+              <div class="panel-subtitle">凡人修仙</div>
+            </div>
+            <div class="close">×</div>
+          </div>
+          <div class="search-box">搜索指令或说明</div>
+          <div class="panel-body">
+            <div class="tabs">
+              <div class="tab active">常用</div>
+              <div class="tab">最近</div>
+              <div class="tab">入门与角色</div>
+              <div class="tab">修炼与突破</div>
+              <div class="tab">宗门</div>
+            </div>
+            <div class="commands">
+              <div class="cmd">
+                <div><strong>.帮助</strong><span>查看基础帮助。</span></div>
+                <div class="cmd-star">★</div>
+              </div>
+              <div class="cmd">
+                <div><strong>.检测灵根</strong><span>开始修仙/检测灵根。</span></div>
+                <div class="cmd-star">★</div>
+              </div>
+              <div class="cmd">
+                <div><strong>.我的灵根</strong><span>查看自己或他人的修士面板。</span></div>
+                <div class="cmd-star">★</div>
+              </div>
+              <div class="cmd">
+                <div><strong>.状态</strong><span>查看当前虚弱、避世、阵法等状态。</span></div>
+                <div class="cmd-star">★</div>
+              </div>
+            </div>
+          </div>
+          <div class="panel-foot">点击后填入当前输入框</div>
+        </div>
+        <div class="floating-token">
+          <div class="seal-mark">
+            <img class="seal" src="../../app/src/main/res/drawable-nodpi/floating_cultivation_seal.png" alt="" />
+            <span class="seal-char">令</span>
+          </div>
+          <div class="token-label">指令面板</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

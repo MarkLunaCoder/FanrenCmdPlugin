@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="page_bg">#F6F3EA</color>
+    <color name="panel_bg">#FFFDF7</color>
+    <color name="text_primary">#222222</color>
+    <color name="text_secondary">#5F5B52</color>
+    <color name="brand">#246B57</color>
+    <color name="brand_dark">#174A3B</color>
+    <color name="brand_soft">#E2EFE8</color>
+    <color name="command_param">#9A6A22</color>
+    <color name="command_pressed">#ECE5D6</color>
+    <color name="category_pressed">#D7E7DE</color>
+    <color name="line">#D8D1C3</color>
+</resources>

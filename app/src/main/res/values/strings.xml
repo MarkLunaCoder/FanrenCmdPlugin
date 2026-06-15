@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">凡人指令助手</string>
+    <string name="accessibility_service_label">凡人指令自动填入</string>
+    <string name="accessibility_service_summary">仅在用户选择指令后，将指令填入当前应用输入框，不自动发送。</string>
+    <string name="accessibility_service_description">凡人指令助手需要无障碍权限来识别当前前台应用的可编辑输入框，并在你点击悬浮指令后填入所选指令。服务不自动发送消息，不读取或上传聊天内容。</string>
+    <string name="floating_button_content_description">打开凡人指令面板</string>
+</resources>
