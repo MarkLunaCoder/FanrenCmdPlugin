@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -74,7 +75,12 @@ public class FanRenAccessibilityService extends AccessibilityService {
         }
 
         CharSequence existingText = inputNode.getText();
-        String fallbackText = (existingText == null ? "" : existingText.toString()) + command;
+        String currentText = InputTargetPolicy.textBeforeCommandAppend(
+                existingText,
+                hintTextOf(inputNode),
+                packageNameOf(inputNode)
+        );
+        String fallbackText = currentText + command;
         Bundle arguments = new Bundle();
         arguments.putCharSequence(
                 AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,
@@ -226,6 +232,13 @@ public class FanRenAccessibilityService extends AccessibilityService {
         return node == null || node.getPackageName() == null
                 ? fallbackPackageName
                 : node.getPackageName();
+    }
+
+    private CharSequence hintTextOf(AccessibilityNodeInfo node) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || node == null) {
+            return null;
+        }
+        return node.getHintText();
     }
 
     private void copyToClipboard(String command) {

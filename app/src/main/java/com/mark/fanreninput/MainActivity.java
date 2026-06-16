@@ -3,6 +3,7 @@ package com.mark.fanreninput;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,7 +12,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String PREFS_NAME = "fanren_input";
     private static final String FLOATING_ENABLED = "floating_enabled";
 
@@ -27,6 +29,7 @@ public class MainActivity extends Activity {
         Button openTelegramButton = findViewById(R.id.openTelegramButton);
         Button overlayPermissionButton = findViewById(R.id.overlayPermissionButton);
         Button accessibilityPermissionButton = findViewById(R.id.accessibilityPermissionButton);
+        Button safeExitButton = findViewById(R.id.safeExitButton);
         floatingButtonToggle = findViewById(R.id.floatingButtonToggle);
 
         openTelegramButton.setOnClickListener(view -> openTelegram());
@@ -34,13 +37,31 @@ public class MainActivity extends Activity {
         overlayPermissionButton.setOnClickListener(view -> openOverlaySettings());
         accessibilityPermissionButton.setOnClickListener(view -> openAccessibilitySettings());
         floatingButtonToggle.setOnClickListener(view -> toggleFloatingButton());
+        safeExitButton.setOnClickListener(view -> safeExit());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                .registerOnSharedPreferenceChangeListener(this);
         updateStatus();
         syncFloatingButtonState();
+    }
+
+    @Override
+    protected void onPause() {
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                .unregisterOnSharedPreferenceChangeListener(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (FLOATING_ENABLED.equals(key)) {
+            updateStatus();
+            syncFloatingButtonState();
+        }
     }
 
     private void updateStatus() {
@@ -118,6 +139,14 @@ public class MainActivity extends Activity {
             }
             floatingButtonToggle.setText("开启悬浮按钮");
         }
+    }
+
+    private void safeExit() {
+        setFloatingEnabled(false);
+        FloatingSwitchService.stop(this);
+        syncFloatingButtonState();
+        Toast.makeText(this, "已关闭悬浮窗，无障碍授权保留", Toast.LENGTH_SHORT).show();
+        moveTaskToBack(true);
     }
 
     private boolean canDrawOverlays() {

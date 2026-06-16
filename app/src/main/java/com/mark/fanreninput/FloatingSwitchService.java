@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Set;
 
 public class FloatingSwitchService extends Service {
+    private static final String PREFS_NAME = "fanren_input";
+    private static final String FLOATING_ENABLED = "floating_enabled";
     private static final int MIN_COMMIT_INTERVAL_MS = 700;
     private static final int PANEL_MARGIN_DP = 12;
     private static final int FLOATING_BUTTON_SIZE_DP = 68;
@@ -318,17 +320,17 @@ public class FloatingSwitchService extends Service {
                 1
         ));
 
-        TextView closeButton = new TextView(this);
-        closeButton.setText("×");
-        closeButton.setTextSize(16);
-        closeButton.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
-        closeButton.setGravity(Gravity.CENTER);
-        closeButton.setTextColor(0xFF4D5652);
-        closeButton.setBackgroundResource(R.drawable.floating_panel_close_bg);
-        closeButton.setOnClickListener(view -> hideCommandPanel());
-        LinearLayout.LayoutParams closeParams = new LinearLayout.LayoutParams(dp(30), dp(30));
-        closeParams.setMargins(dp(8), 0, 0, 0);
-        header.addView(closeButton, closeParams);
+        TextView safeExitButton = createHeaderActionButton("安全退出");
+        safeExitButton.setOnClickListener(view -> safeExitFromPanel());
+        LinearLayout.LayoutParams safeExitParams = new LinearLayout.LayoutParams(dp(70), dp(30));
+        safeExitParams.setMargins(dp(8), 0, 0, 0);
+        header.addView(safeExitButton, safeExitParams);
+
+        TextView collapseButton = createHeaderActionButton("收起");
+        collapseButton.setOnClickListener(view -> hideCommandPanel());
+        LinearLayout.LayoutParams collapseParams = new LinearLayout.LayoutParams(dp(44), dp(30));
+        collapseParams.setMargins(dp(6), 0, 0, 0);
+        header.addView(collapseButton, collapseParams);
         root.addView(header, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 dp(44)
@@ -443,6 +445,20 @@ public class FloatingSwitchService extends Service {
         return root;
     }
 
+    private TextView createHeaderActionButton(String text) {
+        TextView button = new TextView(this);
+        button.setText(text);
+        button.setTextSize(12);
+        button.setGravity(Gravity.CENTER);
+        button.setSingleLine(true);
+        button.setIncludeFontPadding(false);
+        button.setTextColor(0xFF4D5652);
+        button.setBackgroundResource(R.drawable.floating_panel_close_bg);
+        button.setClickable(true);
+        button.setFocusable(true);
+        return button;
+    }
+
     private void updatePanelStatus() {
         if (panelStatusText == null) {
             return;
@@ -456,6 +472,16 @@ public class FloatingSwitchService extends Service {
                     : "未找到相关指令";
         }
         panelStatusText.setText(status);
+    }
+
+    private void safeExitFromPanel() {
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                .edit()
+                .putBoolean(FLOATING_ENABLED, false)
+                .apply();
+        hideCommandPanel();
+        Toast.makeText(this, "已关闭悬浮窗，无障碍授权保留", Toast.LENGTH_SHORT).show();
+        stopSelf();
     }
 
     private void buildPanelCategories() {

@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import android.view.accessibility.AccessibilityEvent;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -57,6 +58,51 @@ public class InputTargetPolicyTest {
                 true,
                 AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED,
                 false
+        ));
+    }
+
+    @Test
+    public void textBeforeCommandAppendKeepsActualInput() {
+        assertEquals("已有内容", InputTargetPolicy.textBeforeCommandAppend(
+                "已有内容",
+                "输入消息",
+                "org.telegram.messenger"
+        ));
+    }
+
+    @Test
+    public void textBeforeCommandAppendKeepsActualInputSpacing() {
+        assertEquals(" 已有内容 ", InputTargetPolicy.textBeforeCommandAppend(
+                " 已有内容 ",
+                "输入消息",
+                "org.telegram.messenger"
+        ));
+    }
+
+    @Test
+    public void textBeforeCommandAppendDropsTextThatMatchesHint() {
+        assertEquals("", InputTargetPolicy.textBeforeCommandAppend(
+                "输入消息",
+                "输入消息",
+                "com.miui.notes"
+        ));
+    }
+
+    @Test
+    public void textBeforeCommandAppendDropsTelegramMessagePlaceholder() {
+        assertEquals("", InputTargetPolicy.textBeforeCommandAppend(
+                "输入消息",
+                null,
+                "org.telegram.messenger"
+        ));
+    }
+
+    @Test
+    public void textBeforeCommandAppendKeepsSameTextOutsideTelegramWhenHintMissing() {
+        assertEquals("输入消息", InputTargetPolicy.textBeforeCommandAppend(
+                "输入消息",
+                null,
+                "com.miui.notes"
         ));
     }
 }
