@@ -124,37 +124,6 @@ java.home=<你的 JDK 路径>
 
 `-Apply` 只适合作为重新整理的起点。覆盖后仍需人工校验解析格式、命令分类和本地化调整，再重新构建 APK。
 
-## GitHub Actions 自动构建与发布
-
-项目包含两个 GitHub Actions workflow：
-
-- `Android CI`：推送到 `main`、提交 PR 或手动触发时，运行测试并构建 Debug APK。
-- `Android Release`：推送 `v*` 标签或手动输入版本标签时，构建签名 Release APK，并上传到 GitHub Release。
-
-`Android Release` 需要先在仓库的 `Settings` -> `Secrets and variables` -> `Actions` 中配置以下 Secrets：
-
-```text
-ANDROID_KEYSTORE_BASE64
-ANDROID_KEYSTORE_PASSWORD
-ANDROID_KEY_ALIAS
-ANDROID_KEY_PASSWORD
-```
-
-其中 `ANDROID_KEYSTORE_BASE64` 是 release keystore 文件的 Base64 内容。可以在本机 PowerShell 中生成：
-
-```powershell
-[Convert]::ToBase64String([IO.File]::ReadAllBytes("release-keystore.jks")) | Set-Content -NoNewline release-keystore.base64.txt
-```
-
-配置好 Secrets 后，推送版本标签即可自动发布：
-
-```powershell
-git tag v0.1.0
-git push origin v0.1.0
-```
-
-也可以在 GitHub Actions 页面手动运行 `Android Release`，并输入类似 `v0.1.0` 的版本标签。
-
 ## 许可证
 
 除另有说明外，本项目代码按 [MIT License](LICENSE) 发布。
